@@ -34,7 +34,7 @@ def create_release_draft(url, repo, tag, info, git_auth):
         "name": f"{tag}",
         "draft": True,
         "prerelease": True,
-        "body": f"## What's Changed\r\n# {info['title']} \r\n{info['body']}\r\n\r\n***Full Changelog**: https://github.com/sporveien/{repo}/commits/{tag}"
+        "body": f"## What's Changed\r\n#### {info['title']} \r\n{info['body']}\r\n\r\n***Full Changelog**: https://github.com/sporveien/{repo}/commits/{tag}"
         })
     headers = {
         'Authorization': git_auth,
