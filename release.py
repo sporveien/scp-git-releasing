@@ -48,10 +48,12 @@ def create_release_draft(url, repo, tag, info, git_auth, org):
 
 def get_pull_information(repo, git_auth, base_branch, org):
     url = f"https://api.github.com/repos/{org}/{repo}/pulls?state=closed&base={base_branch}"
+    print(url)
     headers = {
         'Authorization': git_auth
     }
     pull_response = requests.request("GET", url, headers=headers, data={})
+    print(pull_response.status_code)
     data_json = pull_response.json()[0]
     title = data_json['title']
     body = data_json['body']
