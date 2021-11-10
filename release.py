@@ -48,7 +48,7 @@ def create_release_draft(url, repo, tag, info, git_auth, org):
 
 
 def get_pull_information(repo, git_auth, base_branch, org):
-    url = f"https://api.github.com/repos/sporveien/{repo}/pulls?state=closed&base={base_branch}"
+    url = f"https://api.github.com/repos/{org}/{repo}/pulls?state=closed&base={base_branch}"
     headers = {
         'Authorization': git_auth
     }
@@ -78,7 +78,7 @@ def create_release(repository, release_url, git_auth, base_branch):
     tag = get_tag(release_url, info['update_type'], git_auth)
     print(tag)
     print(info)
-    create_release_draft(release_url, repository, tag, info, git_auth, org)
+    create_release_draft(release_url, repository, tag, info, git_auth, base_branch, org)
 
 
 try:
