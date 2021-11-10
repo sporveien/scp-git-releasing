@@ -46,7 +46,6 @@ def create_release_draft(url, repo, tag, info, git_auth, org):
     return(response.text)
 
 
-
 def get_pull_information(repo, git_auth, base_branch, org):
     url = f"https://api.github.com/repos/{org}/{repo}/pulls?state=closed&base={base_branch}"
     headers = {
@@ -72,13 +71,12 @@ def get_pull_information(repo, git_auth, base_branch, org):
     return(info)
 
 
-
-def create_release(repository, release_url, git_auth, base_branch):
+def create_release(repository, release_url, git_auth, base_branch, org):
     info = get_pull_information(repository, git_auth, base_branch, org)
     tag = get_tag(release_url, info['update_type'], git_auth)
     print(tag)
     print(info)
-    create_release_draft(release_url, repository, tag, info, git_auth, base_branch, org)
+    create_release_draft(release_url, repository, tag, info, git_auth, org)
 
 
 try:
@@ -87,7 +85,7 @@ try:
     base_branch = os.environ['BASE_BRANCH']
     repository = os.environ['CIRCLE_PROJECT_REPONAME']
     org = os.environ['CIRCLE_PROJECT_USERNAME']
-    release_url = f"https://api.github.com/repos/{org}/{repository}/releases" 
+    release_url = f"https://api.github.com/repos/{org}/{repository}/releases"
 
     create_release(repository, release_url, git_auth, base_branch, org)
 

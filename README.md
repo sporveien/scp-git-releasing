@@ -8,6 +8,7 @@
   
 * Add a fitting title and well decribing comment(which will be used to make the release notes)
 
+
 #### Important!!! 
 Add remember to add new label into repository which uses this script.
 Add "major update" as a label
