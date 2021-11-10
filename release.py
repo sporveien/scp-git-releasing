@@ -28,13 +28,13 @@ def get_tag(url, update_type, git_auth):
     return new_tag
 
 
-def create_release_draft(url, repo, tag, info, git_auth):
+def create_release_draft(url, repo, tag, info, git_auth, org):
     payload = json.dumps({
         "tag_name": f"{tag}",
         "name": f"{tag}",
         "draft": True,
         "prerelease": True,
-        "body": f"## What's Changed\r\n### {info['title']} \r\n{info['body']}\r\n\r\n***Full Changelog**: https://github.com/sporveien/{repo}/commits/{tag}"
+        "body": f"## What's Changed\r\n### {info['title']} \r\n{info['body']}\r\n\r\n***Full Changelog**: https://github.com/{org}/{repo}/commits/{tag}"
 
         })
     headers = {
@@ -46,7 +46,8 @@ def create_release_draft(url, repo, tag, info, git_auth):
     return(response.text)
 
 
-def get_pull_information(repo, git_auth, base_branch):
+
+def get_pull_information(repo, git_auth, base_branch, org):
     url = f"https://api.github.com/repos/sporveien/{repo}/pulls?state=closed&base={base_branch}"
     headers = {
         'Authorization': git_auth
@@ -71,12 +72,13 @@ def get_pull_information(repo, git_auth, base_branch):
     return(info)
 
 
+
 def create_release(repository, release_url, git_auth, base_branch):
-    info = get_pull_information(repository, git_auth, base_branch)
+    info = get_pull_information(repository, git_auth, base_branch, org)
     tag = get_tag(release_url, info['update_type'], git_auth)
     print(tag)
     print(info)
-    create_release_draft(release_url, repository, tag, info, git_auth)
+    create_release_draft(release_url, repository, tag, info, git_auth, org)
 
 
 try:
@@ -86,7 +88,8 @@ try:
     repository = os.environ['CIRCLE_PROJECT_REPONAME']
     org = os.environ['CIRCLE_PROJECT_USERNAME']
     release_url = f"https://api.github.com/repos/{org}/{repository}/releases" 
-    create_release(repository, release_url, git_auth, base_branch)
+
+    create_release(repository, release_url, git_auth, base_branch, org)
 
 except BaseException as err:
     print(f"Unexpected {err=}, {type(err)=}")
