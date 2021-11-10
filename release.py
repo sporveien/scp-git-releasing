@@ -46,8 +46,8 @@ def create_release_draft(url, repo, tag, info, git_auth):
     return(response.text)
 
 
-def get_pull_information(repo, git_auth):
-    url = f"https://api.github.com/repos/sporveien/{repo}/pulls?state=closed"
+def get_pull_information(repo, git_auth, base_branch):
+    url = f"https://api.github.com/repos/sporveien/{repo}/pulls?state=closed&base={base_branch}"
     headers = {
         'Authorization': git_auth
     }
@@ -71,8 +71,8 @@ def get_pull_information(repo, git_auth):
     return(info)
 
 
-def create_release(repository, release_url, git_auth):
-    info = get_pull_information(repository, git_auth)
+def create_release(repository, release_url, git_auth, base_branch):
+    info = get_pull_information(repository, git_auth, base_branch)
     tag = get_tag(release_url, info['update_type'], git_auth)
     print(tag)
     print(info)
@@ -82,10 +82,11 @@ def create_release(repository, release_url, git_auth):
 try:
     print(os.environ)
     git_auth = os.environ['GITHUB_AUTH']
+    base_branch = os.environ['BASE_BRANCH']
     repository = os.environ['CIRCLE_PROJECT_REPONAME']
     org = os.environ['CIRCLE_PROJECT_USERNAME']
     release_url = f"https://api.github.com/repos/{org}/{repository}/releases" 
-    create_release(repository, release_url, git_auth)
+    create_release(repository, release_url, git_auth, base_branch)
 
 except BaseException as err:
     print(f"Unexpected {err=}, {type(err)=}")
