@@ -10,21 +10,28 @@ def get_tag(url, update_type, git_auth):
     print(url)
     release_response = requests.request("GET", url, headers=headers, data={})
     print(release_response.json())
-    response_json = release_response.json()[0]
-    last_tag = response_json["tag_name"]
-    print(f'last_tag: {last_tag}')
-    last_tag_processed = last_tag.replace("v", "").split(".")
-    print(f'last_tag_processed: {last_tag_processed}')
-    if update_type == "bug":
-        last_tag_processed[2] = int(last_tag_processed[2]) + 1
-    elif update_type == "enhancement":
-        last_tag_processed[1] = int(last_tag_processed[1]) + 1
-        last_tag_processed[2] = 0
-    elif update_type == "major update":
-        last_tag_processed[0] = int(last_tag_processed[0]) + 1
-        last_tag_processed[1] = 0
-        last_tag_processed[2] = 0
-    new_tag = "v" + str(last_tag_processed[0]) + "." + str(last_tag_processed[1]) + "." + str(last_tag_processed[2])
+    if release_response.json() == []:
+        print("No previous releases")
+        new_tag = "v0.1.0"
+    else:
+        response_json = release_response.json()[0]
+        last_tag = response_json["tag_name"]
+        print(f'last_tag: {last_tag}')
+        if last_tag[0] == "v":
+            last_tag_processed = last_tag.replace("v", "").split(".")
+            print(f'last_tag_processed: {last_tag_processed}')
+            if update_type == "bug":
+                last_tag_processed[2] = int(last_tag_processed[2]) + 1
+            elif update_type == "enhancement":
+                last_tag_processed[1] = int(last_tag_processed[1]) + 1
+                last_tag_processed[2] = 0
+            elif update_type == "major update":
+                last_tag_processed[0] = int(last_tag_processed[0]) + 1
+                last_tag_processed[1] = 0
+                last_tag_processed[2] = 0
+            new_tag = "v" + str(last_tag_processed[0]) + "." + str(last_tag_processed[1]) + "." + str(last_tag_processed[2])
+        else:
+            new_tag = "v0.1.0"
     return new_tag
 
 
@@ -35,7 +42,6 @@ def create_release_draft(url, repo, tag, info, git_auth, org):
         "draft": True,
         "prerelease": True,
         "body": f"## What's Changed\r\n### {info['title']} \r\n{info['body']}\r\n\r\n***Full Changelog**: https://github.com/{org}/{repo}/commits/{tag}"
-
         })
     headers = {
         'Authorization': git_auth,
