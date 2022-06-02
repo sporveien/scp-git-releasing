@@ -20,7 +20,7 @@ def get_tag(url, update_type, git_auth):
         if last_tag[0] == "v":
             last_tag_processed = last_tag.replace("v", "").split(".")
             print(f'last_tag_processed: {last_tag_processed}')
-            if update_type == "bug":
+            if update_type == "bug" or update_type == "documentation":
                 last_tag_processed[2] = int(last_tag_processed[2]) + 1
             elif update_type == "enhancement":
                 last_tag_processed[1] = int(last_tag_processed[1]) + 1
