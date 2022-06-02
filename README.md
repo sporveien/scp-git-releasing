@@ -2,7 +2,7 @@
 ## How to use:
 * Pull code into main from feature
 * Create pull request from maint to test. In the test add one of labels
-  * "bug" 
+  * "bug" / "documentation" 
   * "enchancement" 
   * "major update"
   
