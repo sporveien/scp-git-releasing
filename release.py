@@ -67,6 +67,8 @@ def get_pull_information(repo, git_auth, base_branch, org):
     for label in data_json['labels']:
         if label['name'] == "bug":
             update_type = "bug"
+        elif label['name'] == "documentation":
+            update_type = "documentation"
         elif label['name'] == "enhancement":
             update_type = "enhancement"
         elif label['name'] == "major update":
