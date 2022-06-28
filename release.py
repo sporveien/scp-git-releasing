@@ -14,10 +14,17 @@ def get_tag(url, update_type, git_auth):
         print("No previous releases")
         new_tag = "v0.1.0"
     else:
-        response_json = release_response.json()[0]
-        last_tag = response_json["tag_name"]
-        print(f'last_tag: {last_tag}')
-        if last_tag[0] == "v":
+        response_json = release_response.json()
+        for i in response_json:
+            tag_name = i["tag_name"]
+            p = i["prerelease"]
+            d = i["draft"]
+            if not p or not d:
+                last_tag = tag_name
+                break
+        if not last_tag:
+            new_tag = "v0.1.0"
+        elif last_tag[0] == "v":
             last_tag_processed = last_tag.replace("v", "").split(".")
             print(f'last_tag_processed: {last_tag_processed}')
             if update_type == "bug" or update_type == "documentation":
