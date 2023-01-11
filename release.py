@@ -98,7 +98,7 @@ def create_release(repository, release_url, git_auth, base_branch, org):
 
 try:
     print(os.environ)
-    git_auth = os.environ['GITHUB_AUTH']
+    git_auth = f"token {os.environ['GITHUB_AUTH']}" 
     base_branch = os.environ['BASE_BRANCH']
     repository = os.environ['CIRCLE_PROJECT_REPONAME']
     org = os.environ['CIRCLE_PROJECT_USERNAME']
